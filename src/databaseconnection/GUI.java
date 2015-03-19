@@ -24,6 +24,17 @@ public class GUI extends javax.swing.JFrame {
         this.dbConn = dbConn;
     }
 
+    public void executeQuery() {
+        switch (dbConn.execute(executeTextField.getText()))
+        {
+            case 1064:
+                JOptionPane.showMessageDialog(this, "Attenzione!\nQuery inserita sbagliata!", "ERRORE!", JOptionPane.ERROR_MESSAGE, null);
+                break;
+            default:
+                jTable1.setModel(new javax.swing.table.DefaultTableModel(dbConn.getTable(), dbConn.getColumnTitle()));
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,12 +65,6 @@ public class GUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        hostTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hostTextFieldActionPerformed(evt);
-            }
-        });
-
         portTextField.setText("3306");
 
         jLabel1.setText("Host");
@@ -85,9 +90,9 @@ public class GUI extends javax.swing.JFrame {
         jLabel7.setText("Scrivi la Query da eseguire:");
 
         executeTextField.setEnabled(false);
-        executeTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                executeTextFieldActionPerformed(evt);
+        executeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                executeTextFieldKeyPressed(evt);
             }
         });
 
@@ -210,10 +215,6 @@ public class GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void hostTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hostTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_hostTextFieldActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         switch (jButton1.getText()) {
             case "Connetti":
@@ -250,19 +251,13 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        switch (dbConn.execute(executeTextField.getText()))
-        {
-            case 1064:
-                JOptionPane.showMessageDialog(this, "Attenzione!\nQuery inserita sbagliata!", "ERRORE!", JOptionPane.ERROR_MESSAGE, null);
-                break;
-            default:
-                jTable1.setModel(new javax.swing.table.DefaultTableModel(dbConn.getTable(), dbConn.getColumnTitle()));
-        }
+        executeQuery();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void executeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_executeTextFieldActionPerformed
+    private void executeTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_executeTextFieldKeyPressed
+        if(evt.getKeyChar() == '\n')
+            executeQuery();
+    }//GEN-LAST:event_executeTextFieldKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField databaseNameTextField;
